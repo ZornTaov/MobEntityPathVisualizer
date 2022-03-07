@@ -1,14 +1,14 @@
 package org.zornco.pathvis.datagen;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.data.ShapedRecipeBuilder;
-import net.minecraft.item.Items;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
+import org.jetbrains.annotations.NotNull;
 import org.zornco.pathvis.Registration;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public class RecipeGenerator extends RecipeProvider {
@@ -16,8 +16,9 @@ public class RecipeGenerator extends RecipeProvider {
         super(gen);
     }
 
+
     @Override
-    protected void buildShapelessRecipes(@Nonnull Consumer<IFinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(@NotNull Consumer<FinishedRecipe> consumer) {
         // ================================================================================================================
         //    ITEMS
         // ================================================================================================================

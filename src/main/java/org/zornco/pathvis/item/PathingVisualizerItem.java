@@ -1,6 +1,6 @@
 package org.zornco.pathvis.item;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import org.zornco.pathvis.Registration;
 
 public class PathingVisualizerItem extends Item {

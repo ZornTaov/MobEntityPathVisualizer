@@ -1,14 +1,14 @@
 package org.zornco.pathvis;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,13 +37,13 @@ public class MobEntityPathVisualizer
         @SubscribeEvent
         public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
             LivingEntity le = event.getEntityLiving();
-            if (le instanceof MobEntity) { // only MobEntity has a Navigator, so this includes most entities
-                PathNavigator navi = ((MobEntity) le).getNavigation();
-                if (le.level instanceof ServerWorld && le.level.getGameTime() % 10 == 0) { // only generate every 0.5 seconds, to try and cut back on packet spam
-                    List<ServerPlayerEntity> players = ((ServerWorld) le.level).getPlayers((player) ->
-                        player.getItemBySlot(EquipmentSlotType.MAINHAND).getItem() instanceof PathingVisualizerItem ||
-                            player.getItemBySlot(EquipmentSlotType.OFFHAND).getItem() instanceof PathingVisualizerItem);
-                    for (ServerPlayerEntity player: players) {
+            if (le instanceof Mob) { // only MobEntity has a Navigator, so this includes most entities
+                PathNavigation navi = ((Mob) le).getNavigation();
+                if (le.level instanceof ServerLevel && le.level.getGameTime() % 10 == 0) { // only generate every 0.5 seconds, to try and cut back on packet spam
+                    List<ServerPlayer> players = ((ServerLevel) le.level).getPlayers((player) ->
+                        player.getItemBySlot(EquipmentSlot.MAINHAND).getItem() instanceof PathingVisualizerItem ||
+                            player.getItemBySlot(EquipmentSlot.OFFHAND).getItem() instanceof PathingVisualizerItem);
+                    for (ServerPlayer player: players) {
                         Path path = navi.getPath();
                         if (path != null) {
                             for (int i = path.getNextNodeIndex(); i < path.getNodeCount(); i++) {
@@ -54,17 +54,17 @@ public class MobEntityPathVisualizer
                                 //get difference for vector
                                 BlockPos endPos = nextPos.subtract(pos);
                                 //render pathpoints
-                                ((ServerWorld) le.level).sendParticles(player, ParticleTypes.HAPPY_VILLAGER,false,
+                                ((ServerLevel) le.level).sendParticles(player, ParticleTypes.HAPPY_VILLAGER,false,
                                     pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
                                     0, 0, 0, 0);
                                 //send a particle between points for direction
-                                ((ServerWorld) le.level).sendParticles(player, ParticleTypes.END_ROD,false,
+                                ((ServerLevel) le.level).sendParticles(player, ParticleTypes.END_ROD,false,
                                     pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
                                     endPos.getX(), endPos.getY(), endPos.getZ(), 0.1);
                             }
                             // render end point
                             BlockPos pos = navi.getTargetPos();
-                            ((ServerWorld) le.level).sendParticles(player, ParticleTypes.HEART,false,
+                            ((ServerLevel) le.level).sendParticles(player, ParticleTypes.HEART,false,
                                 pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
                                 0, 0, 0, 0);
                         }
