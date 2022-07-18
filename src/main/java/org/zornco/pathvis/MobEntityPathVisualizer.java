@@ -35,10 +35,11 @@ public class MobEntityPathVisualizer
     public static class ServerEvents {
 
         @SubscribeEvent
-        public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-            LivingEntity le = event.getEntityLiving();
-            if (le instanceof Mob) { // only MobEntity has a Navigator, so this includes most entities
-                PathNavigation navi = ((Mob) le).getNavigation();
+        public static void onLivingUpdateEvent(LivingEvent.LivingTickEvent event) {
+            LivingEntity le = event.getEntity();
+            if (le instanceof Mob mob) { // only MobEntity has a Navigator, so this includes most entities
+                PathNavigation navi = mob.getNavigation();
+
                 if (le.level instanceof ServerLevel && le.level.getGameTime() % 10 == 0) { // only generate every 0.5 seconds, to try and cut back on packet spam
                     List<ServerPlayer> players = ((ServerLevel) le.level).getPlayers((player) ->
                         player.getItemBySlot(EquipmentSlot.MAINHAND).getItem() instanceof PathingVisualizerItem ||
@@ -64,9 +65,11 @@ public class MobEntityPathVisualizer
                             }
                             // render end point
                             BlockPos pos = navi.getTargetPos();
-                            ((ServerLevel) le.level).sendParticles(player, ParticleTypes.HEART,false,
-                                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
-                                0, 0, 0, 0);
+                            if (pos != null) {
+                                ((ServerLevel) le.level).sendParticles(player, ParticleTypes.HEART,false,
+                                    pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
+                                    0, 0, 0, 0);
+                            }
                         }
                     }
                 }

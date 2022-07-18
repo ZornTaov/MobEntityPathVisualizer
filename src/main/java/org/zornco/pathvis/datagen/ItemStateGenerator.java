@@ -17,7 +17,7 @@ public class ItemStateGenerator extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        singleTexture(Objects.requireNonNull(Registration.PATHING_VISUALIZER_ITEM.get().getRegistryName()).getPath(),
+        singleTexture(Objects.requireNonNull(Registration.PATHING_VISUALIZER_ITEM.getId()).getPath(),
             new ResourceLocation("item/handheld"),
             "layer0", new ResourceLocation(MobEntityPathVisualizer.MOD_ID, "item/pathing_visualizer"));
     }
