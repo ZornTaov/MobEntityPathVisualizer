@@ -13,3 +13,8 @@ To see the path, craft the Path Scanner tool and hold it in your main-hand or of
 # Recipe
 
 ![recipe](https://raw.githubusercontent.com/ZornTaov/MobEntityPathVisualizer/175a8f99441e687fe0bfb3588bd4d2afc5aa408f/Images/Recipe.jpg)
+
+# TODO
+- Create custom partical effects
+  - This should fix particles not being seen through the surface of water
+- Create Resource Packs for optional item textures
