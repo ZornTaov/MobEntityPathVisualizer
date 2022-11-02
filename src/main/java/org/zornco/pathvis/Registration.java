@@ -25,6 +25,7 @@ public class Registration {
     public static final RegistryObject<PathingVisualizerItem> PATHING_VISUALIZER_ITEM = ITEMS.register("pathing_visualizer", PathingVisualizerItem::new);
     public static void init(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
+        ClientRegistration.PARTICLE.register(modEventBus);
     }
     public static final CreativeModeTab ITEM_GROUP = new CreativeModeTab(MobEntityPathVisualizer.MOD_ID) {
         @Nonnull

@@ -1,7 +1,6 @@
 package org.zornco.pathvis;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,6 +15,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.zornco.pathvis.item.PathingVisualizerItem;
+import org.zornco.pathvis.particles.NodeParticleData;
 
 import java.util.List;
 
@@ -51,24 +51,27 @@ public class MobEntityPathVisualizer
                                 //get current point
                                 BlockPos pos = path.getNode(i).asBlockPos();
                                 //get next point (or current point)
-                                BlockPos nextPos = (i+1) != path.getNodeCount() ? path.getNode(i+1).asBlockPos() : pos;
+                                BlockPos nextPos = (i+1) != path.getNodeCount() ? path.getNode(i+1).asBlockPos() : navi.getTargetPos() != null ? navi.getTargetPos() : pos;
                                 //get difference for vector
                                 BlockPos endPos = nextPos.subtract(pos);
                                 //render pathpoints
-                                level.sendParticles(player, ParticleTypes.HAPPY_VILLAGER,false,
+                                NodeParticleData data = new NodeParticleData(.2f, .5f, 1f, 1.5f);
+                                level.sendParticles(player, data,false,
                                     pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
-                                    0, 0, 0, 0);
+                                    pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1);
                                 //send a particle between points for direction
-                                level.sendParticles(player, ParticleTypes.END_ROD,false,
+                                NodeParticleData dataw = new NodeParticleData(1f, 1f, 1f, 1f);
+                                level.sendParticles(player, dataw,false,
                                     pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
-                                    endPos.getX(), endPos.getY(), endPos.getZ(), 0.1);
+                                    nextPos.getX() + 0.5, nextPos.getY() + 0.5, nextPos.getZ() + 0.5, 1);
                             }
                             // render end point
                             BlockPos pos = navi.getTargetPos();
                             if (pos != null) {
-                                level.sendParticles(player, ParticleTypes.HEART,false,
+                                NodeParticleData data = new NodeParticleData(1f, .2f, .2f, 2f);
+                                level.sendParticles(player, data,false,
                                     pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0,
-                                    0, 0, 0, 0);
+                                    pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1);
                             }
                         }
                     }
